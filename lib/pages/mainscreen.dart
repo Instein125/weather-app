@@ -1,47 +1,297 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
+
+import 'package:weather_app/presentation/textstyle_manager.dart';
 
 import '../presentation/colors_manager.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+  static const String route = "/mainScreen";
+  String countryName = "Sweden";
+  String placeName = "Stockholm";
+  String date = "Tue, Jan 30";
+  String temp = "19";
+  String condition = "Rainy";
+  MainScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                ColorManager.backGroundColor1,
+                ColorManager.backGroundColor2
+              ],
+              stops: const [
+                0.5,
+                1
+              ]),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: height * 0.1,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.asset(
+                    "assets/images/search.png",
+                    height: 40,
+                  ),
+                  Image.asset(
+                    "assets/images/menu.png",
+                    height: 40,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: height * 0.18,
+              width: double.infinity,
+              // color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+              child: PlaceInfoWidget(
+                  placeName: placeName, countryName: countryName, date: date),
+            ),
+            Container(
+              height: height * 0.21,
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 4),
+              // color: Colors.white,
+              child: Row(
+                children: [
+                  MainImage(imagePath: "assets/images/rani_with_sun.png"),
+                  const Spacer(),
+                  TempConditionWidget(temp: temp, condition: condition),
+                ],
+              ),
+            ),
+            Container(
+              height: height * 0.34,
+              width: double.infinity,
+              // color: Colors.amber,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              // color: Colors.white,
+              child: Column(
+                children: [
+                  InfoConditionWidget(
+                      imagePath: 'assets/images/rainfall.png',
+                      title: 'Rainfall',
+                      value: '3cm'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  InfoConditionWidget(
+                      imagePath: 'assets/images/wind.png',
+                      title: 'Wind',
+                      value: '19km/h'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  InfoConditionWidget(
+                      imagePath: 'assets/images/humidity.png',
+                      title: 'Humidity',
+                      value: '64%'),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InfoConditionWidget extends StatelessWidget {
+  String imagePath;
+  String title;
+  String value;
+  InfoConditionWidget({
+    Key? key,
+    required this.imagePath,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              ColorManager.backGroundColor1,
-              ColorManager.backGroundColor2
-            ],
-            stops: const [
-              0.5,
-              1
-            ]),
-      ),
-      child: Column(
+          borderRadius: BorderRadius.circular(10), color: Colors.white38),
+      height: 60,
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 0),
+      child: Row(
         children: [
-          Container(
-            height: 80,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset(
-                  "assets/images/search.png",
-                  height: 40,
+          Column(
+            children: [
+              SizedBox(
+                height: title != 'Humidity' ? 10 : 30,
+              ),
+              Expanded(
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: OverflowBox(
+                    maxHeight: title != 'Humidity' ? 100 : 78,
+                    maxWidth: 150,
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      imagePath,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                Image.asset(
-                  "assets/images/menu.png",
-                  height: 40,
-                ),
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(
+            title,
+            style: getTitleStyle(
+              color: ColorManager.darkTextColor,
+              fontSize: 12,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            value,
+            style: getTitleStyle(
+              color: ColorManager.darkTextColor,
+              fontSize: 12,
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class TempConditionWidget extends StatelessWidget {
+  const TempConditionWidget({
+    super.key,
+    required this.temp,
+    required this.condition,
+  });
+
+  final String temp;
+  final String condition;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 120,
+      // color: Colors.red,
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                temp,
+                style: getTempStyle(color: ColorManager.titleTextColor),
+              ),
+              Text(
+                condition,
+                style: getTitleStyle(
+                    color: ColorManager.titleTextColor, fontSize: 20),
+              ),
+            ],
+          ),
+          Positioned(
+              right: 5,
+              top: 10,
+              child: Text(
+                "°C",
+                style: getTitleStyle(
+                    color: ColorManager.titleTextColor, fontSize: 20),
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+//image widget
+class MainImage extends StatelessWidget {
+  String imagePath;
+  MainImage({
+    Key? key,
+    required this.imagePath,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 60,
+        ),
+        Container(
+          height: 50,
+          width: 150,
+          child: OverflowBox(
+            maxHeight: 300,
+            maxWidth: 220,
+            // alignment: Alignment.center,
+            child: Image.asset(
+              imagePath,
+              fit: BoxFit.cover,
+              alignment: Alignment.bottomCenter,
+              height: 220,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+//place country and date widget
+class PlaceInfoWidget extends StatelessWidget {
+  const PlaceInfoWidget({
+    super.key,
+    required this.placeName,
+    required this.countryName,
+    required this.date,
+  });
+
+  final String placeName;
+  final String countryName;
+  final String date;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$placeName,',
+          style: getTitleStyle(color: ColorManager.titleTextColor),
+        ),
+        Text(
+          countryName,
+          style: getTitleStyle(color: ColorManager.titleTextColor),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          date,
+          style: getDimTextStyle(color: ColorManager.lightTextColor),
+        ),
+      ],
     );
   }
 }
