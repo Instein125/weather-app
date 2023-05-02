@@ -30,3 +30,8 @@ TextStyle getTempStyle({double fontSize = 80, required Color color}) {
   return _getTextStyle(
       fontSize, FontManager.fontFamily, FontWeightManager.bold, color);
 }
+
+TextStyle getRegularStyle({double fontSize = 80, required Color color}) {
+  return _getTextStyle(
+      fontSize, FontManager.fontFamily, FontWeightManager.regular, color);
+}

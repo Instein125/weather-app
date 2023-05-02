@@ -6,14 +6,33 @@ import 'package:weather_app/presentation/textstyle_manager.dart';
 
 import '../presentation/colors_manager.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   static const String route = "/mainScreen";
-  String countryName = "Sweden";
-  String placeName = "Stockholm";
-  String date = "Tue, Jan 30";
-  String temp = "19";
-  String condition = "Rainy";
+
   MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  String countryName = "Sweden";
+
+  String placeName = "Stockholm";
+
+  String date = "Tue, Jan 30";
+
+  String temp = "19";
+
+  String condition = "Rainy";
+
+  int selectedIndex = 0;
+
+  void changeIndex(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +120,68 @@ class MainScreen extends StatelessWidget {
                       imagePath: 'assets/images/humidity.png',
                       title: 'Humidity',
                       value: '64%'),
+                ],
+              ),
+            ),
+            Container(
+              height: height * 0.06,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              // color: Colors.white,
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      changeIndex(0);
+                    },
+                    child: Text(
+                      "Today",
+                      style: selectedIndex == 0
+                          ? getTempStyle(
+                              color: ColorManager.titleTextColor, fontSize: 12)
+                          : getRegularStyle(
+                              color: ColorManager.lightTextColor, fontSize: 12),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      changeIndex(1);
+                    },
+                    child: Text(
+                      "Tomorrow",
+                      style: selectedIndex == 1
+                          ? getTempStyle(
+                              color: ColorManager.titleTextColor, fontSize: 12)
+                          : getRegularStyle(
+                              color: ColorManager.lightTextColor, fontSize: 12),
+                    ),
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      changeIndex(2);
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "Next seven days",
+                          style: selectedIndex == 2
+                              ? getTempStyle(
+                                  color: ColorManager.titleTextColor,
+                                  fontSize: 12)
+                              : getRegularStyle(
+                                  color: ColorManager.lightTextColor,
+                                  fontSize: 12),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: selectedIndex == 2
+                              ? ColorManager.titleTextColor
+                              : ColorManager.lightTextColor,
+                          size: 11,
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             )
