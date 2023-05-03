@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:weather_app/api/fetch_weather.dart';
+
+import '../model/weather/current_data.dart';
 
 class GlobalController extends GetxController {
   //variables to be observed
@@ -10,12 +15,17 @@ class GlobalController extends GetxController {
   RxBool checkLoading() => _isLoading;
   RxDouble getLatitude() => _latitude;
   RxDouble getLongitude() => _longitude;
+
+  late var currentDataList = <CurrentData>[].obs;
+  var jsonString;
   //same as init state but for getx
   @override
   void onInit() {
     // TODO: implement onInit
     if (_isLoading.isTrue) {
       getLocation();
+
+      // getCurrentWeatherData(jsonString);
     }
 
     super.onInit();
@@ -54,12 +64,33 @@ class GlobalController extends GetxController {
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high)
-        .then((value) {
+        .then((value) async {
       _latitude.value = value.latitude;
       _longitude.value = value.longitude;
+      jsonString = await FetchWeather()
+          .getWeatherData(_latitude.value, _longitude.value);
       _isLoading.value = false;
+
+      await getCurrentWeatherData(jsonString);
       return value;
     });
+  }
+
+  getCurrentWeatherData(jsonString) {
+    String dateToFilter = "2023-05-03";
+
+    List<dynamic> filteredData = jsonString["data"].where((item) {
+      String date =
+          item["datetime"].split(":")[0]; // Get the date from datetime
+      return date == dateToFilter;
+    }).toList();
+
+    currentDataList.value =
+        filteredData.map((map) => CurrentData.fromMap(map)).toList();
+  }
+
+  getCurrentWeather() {
+    return currentDataList;
   }
 
   //same as dispose state but for getx

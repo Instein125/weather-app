@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../widgets/ImageAndConditionWidget.dart';
 import '../widgets/place_widget.dart';
 import '/presentation/textstyle_manager.dart';
 import '/controller/global_controller.dart';
@@ -96,21 +97,8 @@ class _MainScreenState extends State<MainScreen> {
                           horizontal: 18, vertical: 8),
                       child: const PlaceInfoWidget(),
                     ),
-                    Container(
-                      height: height * 0.21,
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 4),
-                      // color: Colors.white,
-                      child: Row(
-                        children: [
-                          MainImage(
-                              imagePath: "assets/images/rani_with_sun.png"),
-                          const Spacer(),
-                          TempConditionWidget(temp: temp, condition: condition),
-                        ],
-                      ),
-                    ),
+                    ImageAndConditionWidget(
+                        height: height, temp: temp, condition: condition),
                     Container(
                       height: height * 0.34,
                       width: double.infinity,
@@ -207,6 +195,11 @@ class _MainScreenState extends State<MainScreen> {
                           ),
                         ],
                       ),
+                    ),
+                    Container(
+                      height: height * 0.2,
+                      width: double.infinity,
+                      color: Colors.grey,
                     )
                   ],
                 ),
@@ -282,83 +275,5 @@ class InfoConditionWidget extends StatelessWidget {
   }
 }
 
-class TempConditionWidget extends StatelessWidget {
-  const TempConditionWidget({
-    super.key,
-    required this.temp,
-    required this.condition,
-  });
-
-  final String temp;
-  final String condition;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 120,
-      // color: Colors.red,
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                temp,
-                style: getTempStyle(color: ColorManager.titleTextColor),
-              ),
-              Text(
-                condition,
-                style: getTitleStyle(
-                    color: ColorManager.titleTextColor, fontSize: 20),
-              ),
-            ],
-          ),
-          Positioned(
-              right: 3,
-              top: 7,
-              child: Text(
-                "°C",
-                style: getTitleStyle(
-                    color: ColorManager.titleTextColor, fontSize: 20),
-              )),
-        ],
-      ),
-    );
-  }
-}
 
 //image widget
-class MainImage extends StatelessWidget {
-  String imagePath;
-  MainImage({
-    Key? key,
-    required this.imagePath,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 60,
-        ),
-        Container(
-          height: 50,
-          width: 150,
-          child: OverflowBox(
-            maxHeight: 300,
-            maxWidth: 220,
-            // alignment: Alignment.center,
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-              alignment: Alignment.bottomCenter,
-              height: 220,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
