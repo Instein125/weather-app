@@ -90,6 +90,7 @@ class GlobalController extends GetxController {
         filteredData.map((map) => CurrentData.fromMap(map)).toList();
 
     String currentHour = DateTime.now().toUtc().hour.toString();
+    print(currentHour);
 
     _hourList.value = currentDataList.where((item) {
       String hour = item.datetime.split(":")[1]; // Get the date from datetime

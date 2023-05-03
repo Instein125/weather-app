@@ -31,13 +31,13 @@ class _ImageAndConditionWidgetState extends State<ImageAndConditionWidget> {
 
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height * 0.21,
+      height: widget.height * 0.25,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 4),
       // color: Colors.white,
       child: Row(
         children: [
-          MainImage(imagePath: "assets/images/rani_with_sun.png"),
+          MainImage(imagePath: "assets/images/c03n.png"),
           const Spacer(),
           TempConditionWidget(temp: widget.temp, condition: widget.condition),
         ],
@@ -59,7 +59,7 @@ class MainImage extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(
-          height: 60,
+          height: 40,
         ),
         SizedBox(
           height: 50,
@@ -72,7 +72,7 @@ class MainImage extends StatelessWidget {
               imagePath,
               fit: BoxFit.cover,
               alignment: Alignment.bottomCenter,
-              height: 220,
+              height: 150,
             ),
           ),
         ),
@@ -96,6 +96,7 @@ class TempConditionWidget extends StatelessWidget {
     return Container(
       width: 140,
       // color: Colors.red,
+      // alignment: Alignment.bottomLeft,
       child: Stack(
         children: [
           Column(
@@ -106,11 +107,19 @@ class TempConditionWidget extends StatelessWidget {
                 temp,
                 style: getTempStyle(color: ColorManager.titleTextColor),
               ),
-              Flexible(
-                child: Text(
-                  condition,
-                  style: getTitleStyle(
-                      color: ColorManager.titleTextColor, fontSize: 18),
+              Container(
+                height: 50,
+                // color: Colors.red,
+                child: OverflowBox(
+                  maxHeight: 100,
+                  maxWidth: 150,
+                  child: Text(
+                    condition,
+                    // "Thunderstorm with heavy drizzle",
+                    style: getTitleStyle(
+                        color: ColorManager.titleTextColor, fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ],
