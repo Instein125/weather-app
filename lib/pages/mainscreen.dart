@@ -23,14 +23,8 @@ class _MainScreenState extends State<MainScreen> {
     GlobalController(),
     permanent: true,
   );
-
-  String countryName = "Sweden";
-
-  String placeName = "Stockholm";
-
-  String date = "Tue, Jan 30";
-
-  String temp = "35";
+  List currentHourData = [];
+  String temp = '19';
 
   String condition = "Rainy";
 
@@ -43,9 +37,16 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    currentHourData = globalController.getHourList();
 
     return Scaffold(
         body: SafeArea(
@@ -98,7 +99,9 @@ class _MainScreenState extends State<MainScreen> {
                       child: const PlaceInfoWidget(),
                     ),
                     ImageAndConditionWidget(
-                        height: height, temp: temp, condition: condition),
+                        height: height,
+                        temp: currentHourData[0].temp.ceil().toString(),
+                        condition: currentHourData[0].weatherDesc),
                     Container(
                       height: height * 0.34,
                       width: double.infinity,
@@ -111,21 +114,21 @@ class _MainScreenState extends State<MainScreen> {
                           InfoConditionWidget(
                               imagePath: 'assets/images/rainfall.png',
                               title: 'Rainfall',
-                              value: '3cm'),
+                              value: "${currentHourData[0].rainfall}mm/hr"),
                           const SizedBox(
                             height: 10,
                           ),
                           InfoConditionWidget(
                               imagePath: 'assets/images/wind.png',
                               title: 'Wind',
-                              value: '19km/h'),
+                              value: "${currentHourData[0].windSpd}m/sec"),
                           const SizedBox(
                             height: 10,
                           ),
                           InfoConditionWidget(
                               imagePath: 'assets/images/humidity.png',
                               title: 'Humidity',
-                              value: '64%'),
+                              value: "${currentHourData[0].rh}%"),
                         ],
                       ),
                     ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../api/fetch_weather.dart';
 import '../controller/global_controller.dart';
-import '../pages/mainscreen.dart';
 import '../presentation/colors_manager.dart';
 import '../presentation/textstyle_manager.dart';
 
@@ -25,16 +23,9 @@ class ImageAndConditionWidget extends StatefulWidget {
 }
 
 class _ImageAndConditionWidgetState extends State<ImageAndConditionWidget> {
-  final GlobalController globalController = Get.put(
-    GlobalController(),
-    permanent: true,
-  );
   @override
   void initState() {
     // TODO: implement initState
-    var currentList = globalController.getCurrentWeather().value;
-    print("hi i am current list");
-    print(currentList);
     super.initState();
   }
 
@@ -55,6 +46,7 @@ class _ImageAndConditionWidgetState extends State<ImageAndConditionWidget> {
   }
 }
 
+// ignore: must_be_immutable
 class MainImage extends StatelessWidget {
   String imagePath;
   MainImage({
@@ -69,7 +61,7 @@ class MainImage extends StatelessWidget {
         const SizedBox(
           height: 60,
         ),
-        Container(
+        SizedBox(
           height: 50,
           width: 150,
           child: OverflowBox(
@@ -102,7 +94,7 @@ class TempConditionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 120,
+      width: 140,
       // color: Colors.red,
       child: Stack(
         children: [
@@ -114,10 +106,12 @@ class TempConditionWidget extends StatelessWidget {
                 temp,
                 style: getTempStyle(color: ColorManager.titleTextColor),
               ),
-              Text(
-                condition,
-                style: getTitleStyle(
-                    color: ColorManager.titleTextColor, fontSize: 20),
+              Flexible(
+                child: Text(
+                  condition,
+                  style: getTitleStyle(
+                      color: ColorManager.titleTextColor, fontSize: 18),
+                ),
               ),
             ],
           ),

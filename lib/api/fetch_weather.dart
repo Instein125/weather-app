@@ -2,13 +2,17 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../model/weather/current_data.dart';
-import '/model/weather/weather_data.dart';
+import 'package:intl/intl.dart';
 
 class FetchWeather {
+  DateTime todayDate = DateTime.now();
+
   Future getWeatherData(lat, lon) async {
+    String startDate = DateFormat("yyyy-MM-dd").format(todayDate);
+    String endDate = DateFormat("yyyy-MM-dd")
+        .format(DateTime(todayDate.year, todayDate.month, todayDate.day + 7));
     var response =
-        await http.get(Uri.parse(apiUrl(lat, lon, "2023-05-03", "2023-05-06")));
+        await http.get(Uri.parse(apiUrl(lat, lon, startDate, endDate)));
     var jsonString = jsonDecode(response.body);
     return await jsonString;
   }
