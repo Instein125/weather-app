@@ -1,9 +1,11 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import 'package:weather_app/presentation/textstyle_manager.dart';
-
+import '../widgets/place_widget.dart';
+import '/presentation/textstyle_manager.dart';
+import '/controller/global_controller.dart';
 import '../presentation/colors_manager.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,13 +18,18 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final GlobalController globalController = Get.put(
+    GlobalController(),
+    permanent: true,
+  );
+
   String countryName = "Sweden";
 
   String placeName = "Stockholm";
 
   String date = "Tue, Jan 30";
 
-  String temp = "19";
+  String temp = "35";
 
   String condition = "Rainy";
 
@@ -40,155 +47,172 @@ class _MainScreenState extends State<MainScreen> {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                ColorManager.backGroundColor1,
-                ColorManager.backGroundColor2
-              ],
-              stops: const [
-                0.5,
-                1
-              ]),
-        ),
-        child: Column(
-          children: [
-            Container(
-              height: height * 0.1,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    "assets/images/search.png",
-                    height: 40,
-                  ),
-                  Image.asset(
-                    "assets/images/menu.png",
-                    height: 40,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: height * 0.18,
-              width: double.infinity,
-              // color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-              child: PlaceInfoWidget(
-                  placeName: placeName, countryName: countryName, date: date),
-            ),
-            Container(
-              height: height * 0.21,
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 4),
-              // color: Colors.white,
-              child: Row(
-                children: [
-                  MainImage(imagePath: "assets/images/rani_with_sun.png"),
-                  const Spacer(),
-                  TempConditionWidget(temp: temp, condition: condition),
-                ],
-              ),
-            ),
-            Container(
-              height: height * 0.34,
-              width: double.infinity,
-              // color: Colors.amber,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              // color: Colors.white,
-              child: Column(
-                children: [
-                  InfoConditionWidget(
-                      imagePath: 'assets/images/rainfall.png',
-                      title: 'Rainfall',
-                      value: '3cm'),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  InfoConditionWidget(
-                      imagePath: 'assets/images/wind.png',
-                      title: 'Wind',
-                      value: '19km/h'),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  InfoConditionWidget(
-                      imagePath: 'assets/images/humidity.png',
-                      title: 'Humidity',
-                      value: '64%'),
-                ],
-              ),
-            ),
-            Container(
-              height: height * 0.06,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-              // color: Colors.white,
-              child: Row(
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      changeIndex(0);
-                    },
-                    child: Text(
-                      "Today",
-                      style: selectedIndex == 0
-                          ? getTempStyle(
-                              color: ColorManager.titleTextColor, fontSize: 12)
-                          : getRegularStyle(
-                              color: ColorManager.lightTextColor, fontSize: 12),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      changeIndex(1);
-                    },
-                    child: Text(
-                      "Tomorrow",
-                      style: selectedIndex == 1
-                          ? getTempStyle(
-                              color: ColorManager.titleTextColor, fontSize: 12)
-                          : getRegularStyle(
-                              color: ColorManager.lightTextColor, fontSize: 12),
-                    ),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      changeIndex(2);
-                    },
-                    child: Row(
-                      children: [
-                        Text(
-                          "Next seven days",
-                          style: selectedIndex == 2
-                              ? getTempStyle(
-                                  color: ColorManager.titleTextColor,
-                                  fontSize: 12)
-                              : getRegularStyle(
-                                  color: ColorManager.lightTextColor,
-                                  fontSize: 12),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: selectedIndex == 2
-                              ? ColorManager.titleTextColor
-                              : ColorManager.lightTextColor,
-                          size: 11,
-                        )
+        body: SafeArea(
+            child: SingleChildScrollView(
+      child: Obx(
+        () => globalController.checkLoading().isTrue
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        ColorManager.backGroundColor1,
+                        ColorManager.backGroundColor2
                       ],
+                      stops: const [
+                        0.5,
+                        1
+                      ]),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      height: height * 0.1,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Image.asset(
+                            "assets/images/search.png",
+                            height: 40,
+                          ),
+                          Image.asset(
+                            "assets/images/menu.png",
+                            height: 40,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Container(
+                      height: height * 0.18,
+                      width: double.infinity,
+                      // color: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 8),
+                      child: const PlaceInfoWidget(),
+                    ),
+                    Container(
+                      height: height * 0.21,
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 4),
+                      // color: Colors.white,
+                      child: Row(
+                        children: [
+                          MainImage(
+                              imagePath: "assets/images/rani_with_sun.png"),
+                          const Spacer(),
+                          TempConditionWidget(temp: temp, condition: condition),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: height * 0.34,
+                      width: double.infinity,
+                      // color: Colors.amber,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
+                      // color: Colors.white,
+                      child: Column(
+                        children: [
+                          InfoConditionWidget(
+                              imagePath: 'assets/images/rainfall.png',
+                              title: 'Rainfall',
+                              value: '3cm'),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          InfoConditionWidget(
+                              imagePath: 'assets/images/wind.png',
+                              title: 'Wind',
+                              value: '19km/h'),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          InfoConditionWidget(
+                              imagePath: 'assets/images/humidity.png',
+                              title: 'Humidity',
+                              value: '64%'),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: height * 0.06,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 2),
+                      // color: Colors.white,
+                      child: Row(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              changeIndex(0);
+                            },
+                            child: Text(
+                              "Today",
+                              style: selectedIndex == 0
+                                  ? getTempStyle(
+                                      color: ColorManager.titleTextColor,
+                                      fontSize: 12)
+                                  : getRegularStyle(
+                                      color: ColorManager.lightTextColor,
+                                      fontSize: 12),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              changeIndex(1);
+                            },
+                            child: Text(
+                              "Tomorrow",
+                              style: selectedIndex == 1
+                                  ? getTempStyle(
+                                      color: ColorManager.titleTextColor,
+                                      fontSize: 12)
+                                  : getRegularStyle(
+                                      color: ColorManager.lightTextColor,
+                                      fontSize: 12),
+                            ),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              changeIndex(2);
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Next seven days",
+                                  style: selectedIndex == 2
+                                      ? getTempStyle(
+                                          color: ColorManager.titleTextColor,
+                                          fontSize: 12)
+                                      : getRegularStyle(
+                                          color: ColorManager.lightTextColor,
+                                          fontSize: 12),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: selectedIndex == 2
+                                      ? ColorManager.titleTextColor
+                                      : ColorManager.lightTextColor,
+                                  size: 11,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            )
-          ],
-        ),
       ),
-    );
+    )));
   }
 }
 
@@ -291,8 +315,8 @@ class TempConditionWidget extends StatelessWidget {
             ],
           ),
           Positioned(
-              right: 5,
-              top: 10,
+              right: 3,
+              top: 7,
               child: Text(
                 "°C",
                 style: getTitleStyle(
@@ -333,44 +357,6 @@ class MainImage extends StatelessWidget {
               height: 220,
             ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-//place country and date widget
-class PlaceInfoWidget extends StatelessWidget {
-  const PlaceInfoWidget({
-    super.key,
-    required this.placeName,
-    required this.countryName,
-    required this.date,
-  });
-
-  final String placeName;
-  final String countryName;
-  final String date;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '$placeName,',
-          style: getTitleStyle(color: ColorManager.titleTextColor),
-        ),
-        Text(
-          countryName,
-          style: getTitleStyle(color: ColorManager.titleTextColor),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Text(
-          date,
-          style: getDimTextStyle(color: ColorManager.lightTextColor),
         ),
       ],
     );
