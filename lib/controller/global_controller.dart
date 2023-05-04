@@ -11,13 +11,14 @@ class GlobalController extends GetxController {
   late final RxDouble _latitude = 0.0.obs;
   late final RxDouble _longitude = 0.0.obs;
   late var currentDataList = <CurrentData>[].obs;
-  var jsonString;
   late final RxList _hourList = [].obs;
+  late final RxList _hourlyWeatherData = [].obs;
   //creating instance for checking variables
   RxBool checkLoading() => _isLoading;
   RxDouble getLatitude() => _latitude;
   RxDouble getLongitude() => _longitude;
   RxList getHourList() => _hourList;
+  RxList getHourlyWeatherData() => _hourlyWeatherData;
 
   //same as init state but for getx
   @override
@@ -68,7 +69,7 @@ class GlobalController extends GetxController {
         .then((value) async {
       _latitude.value = value.latitude;
       _longitude.value = value.longitude;
-      jsonString = await FetchWeather()
+      var jsonString = await FetchWeather()
           .getWeatherData(_latitude.value, _longitude.value);
       _isLoading.value = false;
 
@@ -90,12 +91,26 @@ class GlobalController extends GetxController {
         filteredData.map((map) => CurrentData.fromMap(map)).toList();
 
     String currentHour = DateTime.now().toUtc().hour.toString();
-    print(currentHour);
 
     _hourList.value = currentDataList.where((item) {
       String hour = item.datetime.split(":")[1]; // Get the date from datetime
       return hour == currentHour;
     }).toList();
+
+    for (var data in currentDataList) {
+      String time =
+          data.datetime.split(':')[1]; // Extracting time from datetime field
+      String temp = data.temp == null ? 'null' : data.temp.ceil().toString();
+      String weatherIcon = data.iconCode;
+
+      _hourlyWeatherData.add({
+        'time': time,
+        'temp': temp,
+        'weatherIcon': weatherIcon,
+      });
+    }
+
+    print(_hourlyWeatherData);
   }
 
   getCurrentWeather() {

@@ -7,6 +7,7 @@ class CurrentData {
   final String weatherDesc;
   var windSpd;
   var rainfall;
+  final String iconCode;
 
   CurrentData({
     required this.datetime,
@@ -17,6 +18,7 @@ class CurrentData {
     required this.weatherDesc,
     required this.windSpd,
     required this.rainfall,
+    required this.iconCode,
   });
 
   factory CurrentData.fromMap(Map<String, dynamic> map) {
@@ -29,6 +31,7 @@ class CurrentData {
       timestampUtc: map['timestamp_utc'],
       windSpd: map['wind_spd'] ?? 0,
       rainfall: map['precip'] ?? 0,
+      iconCode: map['weather']['icon'],
     );
   }
 }

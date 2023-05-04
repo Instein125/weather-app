@@ -3,16 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../presentation/colors_manager.dart';
 import '../widgets/ImageAndConditionWidget.dart';
 import '../widgets/place_widget.dart';
-import '/presentation/textstyle_manager.dart';
+import '../widgets/time_temp_image_card.dart';
 import '/controller/global_controller.dart';
-import '../presentation/colors_manager.dart';
+import '/presentation/textstyle_manager.dart';
 
 class MainScreen extends StatefulWidget {
   static const String route = "/mainScreen";
 
-  MainScreen({super.key});
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -24,9 +25,7 @@ class _MainScreenState extends State<MainScreen> {
     permanent: true,
   );
   List currentHourData = [];
-  String temp = '19';
-
-  String condition = "Rainy";
+  List hourlyWeatherData = [];
 
   int selectedIndex = 0;
 
@@ -38,25 +37,26 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    // double width = MediaQuery.of(context).size.width;
     currentHourData = globalController.getHourList();
+    hourlyWeatherData = globalController.getHourlyWeatherData();
+    String currentHour = DateTime.now().toUtc().hour.toString();
 
     return Scaffold(
         body: SafeArea(
-            child: SingleChildScrollView(
-      child: Obx(
-        () => globalController.checkLoading().isTrue
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Container(
+            child: Obx(
+      () => globalController.checkLoading().isTrue
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -72,6 +72,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 child: Column(
                   children: [
+                    // for search and menu
                     Container(
                       height: height * 0.1,
                       padding: const EdgeInsets.symmetric(
@@ -99,9 +100,12 @@ class _MainScreenState extends State<MainScreen> {
                       child: const PlaceInfoWidget(),
                     ),
                     ImageAndConditionWidget(
-                        height: height,
-                        temp: currentHourData[0].temp.ceil().toString(),
-                        condition: currentHourData[0].weatherDesc),
+                      height: height,
+                      temp: currentHourData[0].temp.ceil().toString(),
+                      condition: currentHourData[0].weatherDesc,
+                      iconName: currentHourData[0].iconCode,
+                    ),
+                    // for info widget
                     Container(
                       height: height * 0.34,
                       width: double.infinity,
@@ -132,6 +136,7 @@ class _MainScreenState extends State<MainScreen> {
                         ],
                       ),
                     ),
+                    //for today tomorrow
                     Container(
                       height: height * 0.06,
                       padding: const EdgeInsets.symmetric(
@@ -199,15 +204,30 @@ class _MainScreenState extends State<MainScreen> {
                         ],
                       ),
                     ),
+                    //for today condition
                     Container(
-                      height: height * 0.2,
-                      width: double.infinity,
-                      color: Colors.grey,
-                    )
+                        height: height * 0.18,
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                        ),
+                        // color: Colors.grey,
+
+                        child: ListView.builder(
+                          itemCount: hourlyWeatherData.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            return TimeTempImageCard(
+                              hourlyWeatherData: hourlyWeatherData,
+                              index: index,
+                              currentHour: currentHour,
+                            );
+                          },
+                        ))
                   ],
                 ),
               ),
-      ),
+            ),
     )));
   }
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../controller/global_controller.dart';
 import '../presentation/colors_manager.dart';
 import '../presentation/textstyle_manager.dart';
 
@@ -11,11 +9,13 @@ class ImageAndConditionWidget extends StatefulWidget {
     required this.height,
     required this.temp,
     required this.condition,
+    required this.iconName,
   });
 
   final double height;
   final String temp;
   final String condition;
+  final String iconName;
 
   @override
   State<ImageAndConditionWidget> createState() =>
@@ -37,7 +37,7 @@ class _ImageAndConditionWidgetState extends State<ImageAndConditionWidget> {
       // color: Colors.white,
       child: Row(
         children: [
-          MainImage(imagePath: "assets/images/c03n.png"),
+          MainImage(imagePath: "assets/images/${widget.iconName}.png"),
           const Spacer(),
           TempConditionWidget(temp: widget.temp, condition: widget.condition),
         ],
