@@ -1,16 +1,7 @@
-# weather_app
+This is a weather app I buit using flutter.
+I have used getX as state management.
+Designed is taken from figma community.
+I have used weather bit api for weather information. So I was only able to retrieve proper weather information of current date only.
+ScreenShots:/n
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![weatherAPP](https://user-images.githubusercontent.com/83692376/236271715-8dd93f77-76c0-4b51-8aab-480b3f403c78.jpg)
